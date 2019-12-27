@@ -1,0 +1,13 @@
+[package]
+name = "clsol"
+version = "0.1.0"
+authors = ["Erik Larson <erik@welarson.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+text_io = "0.1"
+rand = "0.7"
+arr_macro = "0.1"
+hamcrest2 = "*"
