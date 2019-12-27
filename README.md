@@ -1,0 +1,2 @@
+# clsol
+Command Line Solitaire
