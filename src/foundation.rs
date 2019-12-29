@@ -12,17 +12,17 @@ impl Foundation {
     Foundation{cards: Vec::new(), suit: suit}
   }
 
-  pub fn get_suit(&self) -> &card::Suit {
-    &self.suit
-  }
-
-  pub fn get_top(&self) -> Option<&card::Card> {
+  pub fn get_top(&self) -> Option<&'static card::Card> {
     if self.cards.is_empty() {
       None
     }
     else {
       Some(self.cards[self.cards.len() - 1])
     }
+  }
+
+  pub fn take(&mut self) -> Option<&'static card::Card> {
+    self.cards.pop()
   }
 
   pub fn is_full(&self) -> bool {
@@ -67,7 +67,6 @@ mod tests {
     assert_that!(fdh.is_full(), is(false));
     let top = fdh.get_top();
     assert_that!(top.is_none(), is(true));
-    assert_that!(fdh.get_suit(), eq(&card::Suit::Heart));
   }
 
   #[test]

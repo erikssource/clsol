@@ -12,7 +12,7 @@ impl Pile {
 
   pub fn display_row(&self, row: u8) -> String {
     if row as usize >= self.cards.len() {
-      String::from("     ")
+      String::from(card::DISPLAY_BLANK)
     } else {   
       let mut row_display = String::new();
       write!(&mut row_display, "{}", self.cards[row as usize]).expect("Error occurred while trying to write row to string.");
@@ -223,7 +223,7 @@ mod tests {
 
     match col.get_top() {
       Some(card) => {
-        assert_that!(card.suit.is_same_suit(&Suit::Spade), is(true));
+        assert_that!(card.suit.code(), eq('S'));
         assert_that!(card.value.rank(), eq(Value::Queen.rank()));
         assert_that!(col.cards.len(), eq(3));
         assert_that!(col.get_top_index(), eq(2));
@@ -278,7 +278,7 @@ mod tests {
     let taken = col.take();
     match taken {
       Some(card) => {
-        assert_that!(card.suit.is_same_suit(&Suit::Spade), is(true));
+        assert_that!(card.suit.code(), eq('S'));
         assert_that!(card.value.rank(), eq(Value::Queen.rank()));
         assert_that!(col.cards.len(), eq(2));
       },

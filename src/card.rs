@@ -55,10 +55,6 @@ impl Card {
     self.value.rank() == Value::King.rank()
   }
 
-  pub fn is_same_suit(&self, card: &Card) -> bool {
-    self.suit.is_same_suit(&card.suit)
-  }
-
   pub fn is_one_more(&self, card: &Card) -> bool {
     1 == (card.value.rank() - self.value.rank())
   }
@@ -143,10 +139,6 @@ impl Suit {
 
   pub fn is_different_color(&self, other: &Suit) -> bool {
     self.color() != other.color()
-  }
-
-  pub fn is_same_suit(&self, other: &Suit) -> bool {
-    *self == *other
   }
 
   pub fn code(&self) -> char {
@@ -239,20 +231,6 @@ mod tests {
   }
 
   #[test]
-  fn test_suit_same_suit_true() {
-    let card1 = Card{suit: Suit::Spade, value: Value::Queen};
-    let card2 = Card{suit: Suit::Spade, value: Value::Nine};
-    assert_eq!(card1.suit.is_same_suit(&card2.suit), true);
-  }
-
-  #[test]
-  fn test_suit_same_suit_false() {
-    let card1 = Card{suit: Suit::Spade, value: Value::Queen};
-    let card2 = Card{suit: Suit::Spade, value: Value::Nine};
-    assert_eq!(card1.suit.is_same_suit(&card2.suit), true);
-  }
-
-  #[test]
   fn test_suit_different_color_true() {
     let card1 = Card{suit: Suit::Spade, value: Value::Queen};
     let card2 = Card{suit: Suit::Diamond, value: Value::Nine};
@@ -299,16 +277,6 @@ mod tests {
 
     assert_that!(queen_of_spades.is_different_color(nine_of_clubs), is(false));
     assert_that!(queen_of_spades.is_different_color(two_of_hearts), is(true));
-  }
-
-  #[test]
-  fn test_card_same_suit() {
-    let queen_of_hearts = Card{suit: Suit::Heart, value: Value::Queen};
-    let nine_of_clubs :&'static Card = &Card{suit: Suit::Club, value: Value::Nine};
-    let two_of_hearts :&'static Card = &Card{suit: Suit::Heart, value: Value::Two};
-
-    assert_that!(queen_of_hearts.is_same_suit(nine_of_clubs), is(false));
-    assert_that!(queen_of_hearts.is_same_suit(two_of_hearts), is(true));
   }
 
   #[test]

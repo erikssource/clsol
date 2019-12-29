@@ -15,10 +15,6 @@ impl Waste {
     self.cards.len()
   }
 
-  pub fn is_empty(&self) -> bool {
-    self.cards.is_empty()
-  }
-
   pub fn put(&mut self, take: Vec<&'static card::Card>) {
     for card in take {
       self.cards.push(card);
@@ -73,7 +69,7 @@ mod tests {
   #[test]
   fn test_create_waste() {
     let waste = waste::Waste::new();
-    assert_that!(waste.is_empty(), is(true));
+    assert_that!(waste.cards.is_empty(), is(true));
   }
 
   #[test]
@@ -121,6 +117,6 @@ mod tests {
 
     let taken = waste.take();
     assert_that!(taken.is_none(), is(true));
-    assert_that!(waste.is_empty(), is(true));
+    assert_that!(waste.cards.is_empty(), is(true));
   }
 }

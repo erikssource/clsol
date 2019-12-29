@@ -1,3 +1,5 @@
+use crate::game;
+
 /*
  * Commands 
  * 
@@ -20,7 +22,8 @@ pub enum Command {
   WasteToFoundation,
   WasteToPile{pile_index: u8},
   PileToFoundation{pile_index: u8},
-  PileToPile{src_pile: u8, dest_pile: u8}
+  PileToPile{src_pile: u8, dest_pile: u8},
+  FoundationToPile{foundation_index: u8, pile_index: u8},
 }
 
 impl Command {
@@ -41,7 +44,7 @@ impl Command {
           }
         } 
         _ => {
-          if s == "h" {
+          if s == "?" {
             return Some(Command::ShowHelp);
           }
           if s == "r" {
@@ -81,12 +84,19 @@ impl Command {
           }
         },
         _ => {
-          if s1 == "k" {
+          if s1 == "k" || s1 == "h" || s1 == "d" || s1 == "s" || s1 == "c" {
             let opt2 = s2.parse::<u8>();
             match opt2 {
               Ok(num2) => {
                 if num2 >= 1 && num2 <= 7 {
-                  return Some(Command::WasteToPile{pile_index: num2});
+                  match s1 {
+                    "h" => return Some(Command::FoundationToPile{foundation_index: game::HEART_FD, pile_index: num2}),
+                    "d" => return Some(Command::FoundationToPile{foundation_index: game::DIAMOND_FD, pile_index: num2}),
+                    "s" => return Some(Command::FoundationToPile{foundation_index: game::SPADE_FD, pile_index: num2}),
+                    "c" => return Some(Command::FoundationToPile{foundation_index: game::CLUB_FD, pile_index: num2}),
+                    "k" => return Some(Command::WasteToPile{pile_index: num2}),
+                    _ => return None,
+                  }
                 }
                 else {
                   return None;
@@ -125,6 +135,7 @@ mod tests {
           Command::WasteToPile{pile_index} => String::from("WasteToPile"),
           Command::PileToFoundation{pile_index} => String::from("PileToFoundation"),
           Command::PileToPile{src_pile, dest_pile} => String::from("PileToPile"),
+          Command::FoundationToPile{foundation_index, pile_index} => String::from("FoundationToPile"),
         }
       },
       None => String::from("")
@@ -133,7 +144,7 @@ mod tests {
 
   #[test]
   fn test_cmd_type() {
-    let cmd = Command::from_string("h");
+    let cmd = Command::from_string("?");
     assert_that!(enum_type(&cmd), eq("ShowHelp"));
 
     let cmd = Command::from_string("r");

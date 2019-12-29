@@ -8,10 +8,10 @@ use crate::tableau::Tableau;
 use crate::waste::Waste;
 use crate::deck::FULL_DECK;
 
-const HEART_FD: usize   = 0;
-const DIAMOND_FD: usize = 1;
-const SPADE_FD: usize   = 2;
-const CLUB_FD: usize    = 3;
+pub const HEART_FD: u8 = 0;
+pub const DIAMOND_FD: u8 = 1;
+pub const SPADE_FD: u8 = 2;
+pub const CLUB_FD: u8 = 3;
 
 pub struct Game {
   foundations: [Foundation; 4],
@@ -57,10 +57,10 @@ impl Game {
   }
 
   pub fn victory(&self) -> bool {
-    self.foundations[HEART_FD].is_full() 
-      && self.foundations[DIAMOND_FD].is_full() 
-      && self.foundations[SPADE_FD].is_full() 
-      && self.foundations[CLUB_FD].is_full() 
+    self.foundations[HEART_FD as usize].is_full() 
+      && self.foundations[DIAMOND_FD as usize].is_full() 
+      && self.foundations[SPADE_FD as usize].is_full() 
+      && self.foundations[CLUB_FD as usize].is_full() 
   }
 
   fn invalid_move(&self) {
@@ -131,6 +131,31 @@ impl Game {
     self.invalid_move();
   }
 
+  pub fn foundation_to_pile(&mut self, foundation_index: u8, pile_index: u8) {
+    let pile_idx = pile_index - 1;
+    let opt = self.foundations[foundation_index as usize].get_top();
+    match opt {
+      Some(top_card) => {
+        //TODO: Get rid of duplicate code with wast to pile. Probably need to define trait 
+        //      for being able to take a card.
+        let pile = &mut self.tableau.piles[pile_idx as usize];
+        if pile.can_add(top_card) {
+          let pop_opt = self.foundations[foundation_index as usize].take();
+          match pop_opt {
+            Some(pop) => {
+              pile.add_card(pop);
+              self.turn += 1;
+              return;
+            },
+            None => (),
+          }
+        }
+      },
+      None => (),      
+    }
+    self.invalid_move();
+  }
+
   pub fn pile_to_foundation<'a>(&mut self, pile_num: u8) {
     let opt = self.tableau.get_top(pile_num - 1);
     match opt {
@@ -170,14 +195,14 @@ impl Game {
   pub fn display(&self) {
     println!("-----------------------------------------------------");
     println!("Turn: {}   Stock: {}   Waste: {}", self.turn, self.stock.size(), self.waste.size());
-    println!("    n      k            H      D      S      C");
+    println!("    n      k            h      d      s      c");
     println!("  {}  {}        {}  {}  {}  {}",
       self.stock,
       self.waste,
-      self.foundations[HEART_FD],
-      self.foundations[DIAMOND_FD],
-      self.foundations[SPADE_FD],
-      self.foundations[CLUB_FD]
+      self.foundations[HEART_FD as usize],
+      self.foundations[DIAMOND_FD as usize],
+      self.foundations[SPADE_FD as usize],
+      self.foundations[CLUB_FD as usize]
     );
     println!("");
     self.tableau.display();
