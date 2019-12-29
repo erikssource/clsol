@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/erikssource/clsol.svg?branch=master)](https://travis-ci.org/erikssource/clsol)
+
 # clsol
 Command Line Solitaire
 
