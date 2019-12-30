@@ -62,7 +62,7 @@ mod tests {
   fn check_taken(opt: Option<&'static card::Card>, card: &'static card::Card) {
     match opt {
       Some(taken) => assert_that!(taken, eq(card)),
-      None => assert!(false)
+      None => panic!(),
     }
   }
 
@@ -96,7 +96,7 @@ mod tests {
     let opt = waste.get_top();
     match opt {
       Some(top_card) => assert_that!(top_card, eq(deck::THREE_OF_HEARTS)),
-      None => assert!(false),
+      None => panic!(),
     };
   }
 

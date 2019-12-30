@@ -9,7 +9,7 @@ pub struct Foundation {
 
 impl Foundation {
   pub fn new(suit: card::Suit) -> Foundation {
-    Foundation{cards: Vec::new(), suit: suit}
+    Foundation{cards: Vec::new(), suit}
   }
 
   pub fn get_top(&self) -> Option<&'static card::Card> {
@@ -93,8 +93,8 @@ mod tests {
   #[test]
   fn test_is_full_true() {
     let mut fdh = Foundation::new(card::Suit::Heart);
-    for i in 0..13 {
-      fdh.add(&FULL_DECK[i]);
+    for card in FULL_DECK.iter().take(13) {
+      fdh.add(card);
     }
     assert_that!(fdh.is_full(), is(true));
   }

@@ -33,7 +33,7 @@ impl Game {
 
     // Deal tableau
     for i in 0..7 {
-      for _ in 0..(i + 1) {
+      for _ in 0..=i {
         match cards.pop() {
           Some(card) => tableau.add_card(i, card),
           None => panic!("Not playing with a full deck"),
@@ -51,7 +51,7 @@ impl Game {
       ],
       stock: Stock::new(cards),
       waste: Waste::new(),
-      tableau: tableau,
+      tableau,
       turn: 0,
     }
   }
@@ -92,13 +92,10 @@ impl Game {
         for foundation in self.foundations.iter_mut() {
           if foundation.can_add(top_card) {
             let pop_opt = self.waste.take();
-            match pop_opt {
-              Some(pop) => {
-                foundation.add(pop);
-                self.turn += 1;
-                return;
-              },
-              None => (),
+            if let Some(pop) = pop_opt {
+              foundation.add(pop);
+              self.turn += 1;
+              return;
             }
           }
         }
@@ -110,66 +107,45 @@ impl Game {
 
   pub fn waste_to_pile(&mut self, pile_num: u8) {
     let pile_idx = pile_num - 1;
-    let opt = self.waste.get_top();
-    match opt {
-      Some(top_card) => {
-        let pile = &mut self.tableau.piles[pile_idx as usize];
-        if pile.can_add(top_card) {
-          let pop_opt = self.waste.take();
-          match pop_opt {
-            Some(pop) => {
-              pile.add_card(pop);
-              self.turn += 1;
-              return;
-            },
-            None => (),
-          }
+    if let Some(top_card) = self.waste.get_top() {
+      let pile = &mut self.tableau.piles[pile_idx as usize];
+      if pile.can_add(top_card) {
+        if let Some(popped_card) = self.waste.take() {
+          pile.add_card(popped_card);
+          self.turn += 1;
+          return;
         }
-      },
-      None => (),
+      }
     }
     self.invalid_move();
   }
 
   pub fn foundation_to_pile(&mut self, foundation_index: u8, pile_index: u8) {
-    let pile_idx = pile_index - 1;
-    let opt = self.foundations[foundation_index as usize].get_top();
-    match opt {
-      Some(top_card) => {
-        //TODO: Get rid of duplicate code with wast to pile. Probably need to define trait 
-        //      for being able to take a card.
-        let pile = &mut self.tableau.piles[pile_idx as usize];
-        if pile.can_add(top_card) {
-          let pop_opt = self.foundations[foundation_index as usize].take();
-          match pop_opt {
-            Some(pop) => {
-              pile.add_card(pop);
-              self.turn += 1;
-              return;
-            },
-            None => (),
-          }
+    //TODO: Get rid of duplicate code with wast to pile. Probably need to define trait 
+    //      for being able to take a card.
+    if let Some(top_card) = self.foundations[foundation_index as usize].get_top() {
+      let pile_idx = pile_index - 1;
+      let pile = &mut self.tableau.piles[pile_idx as usize];
+      if pile.can_add(top_card) {
+        if let Some(popped_card) = self.foundations[foundation_index as usize].take() {
+          pile.add_card(popped_card);
+          self.turn += 1;
+          return;
         }
-      },
-      None => (),      
+      }
     }
     self.invalid_move();
   }
 
-  pub fn pile_to_foundation<'a>(&mut self, pile_num: u8) {
-    let opt = self.tableau.get_top(pile_num - 1);
-    match opt {
+  pub fn pile_to_foundation(&mut self, pile_num: u8) {
+    match self.tableau.get_top(pile_num - 1) {
       Some(top_card) => {
         for foundation in self.foundations.iter_mut() {
           if foundation.can_add(top_card) {
-            let pop_opt = self.tableau.take(pile_num - 1);
-            match pop_opt {
-              Some(pop) => {
-                foundation.add(pop);
-                self.turn += 1;
-                return;
-              },
-              None => (),
+            if let Some(pop) = self.tableau.take(pile_num - 1) {
+              foundation.add(pop);
+              self.turn += 1;
+              return;     
             }
           }
         }
@@ -204,7 +180,7 @@ impl Game {
       self.foundations[SPADE_FD as usize],
       self.foundations[CLUB_FD as usize]
     );
-    println!("");
+    println!();
     self.tableau.display();
   }
 }

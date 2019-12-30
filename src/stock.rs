@@ -27,13 +27,13 @@ impl Stock {
       let len = cmp::min(num as usize, self.cards.len());
       let mut taken :Vec<&'static card::Card> = Vec::new();
       for _ in 0..len {
-        self.cards.pop().map(|card| taken.push(card));
+        if let Some(card) = self.cards.pop() { taken.push(card) }
       }
       Some(taken)
     }
   }
 
-  pub fn refresh(&mut self, waste: &Vec<&'static card::Card>) {
+  pub fn refresh(&mut self, waste: &[&'static card::Card]) {
     self.cards.clear();
     for card in waste.iter() {
       self.cards.insert(0, card);
@@ -72,7 +72,7 @@ mod tests {
   fn check_single_taken(opt: Option<Vec<&'static card::Card>>, card: &'static card::Card) {
     match opt {
       Some(taken) => assert_that!(taken[0], eq(card)),
-      None => assert!(false)
+      None => panic!()
     }
   }
 
@@ -125,7 +125,7 @@ mod tests {
         assert_that!(taken[1], eq(deck::FOUR_OF_HEARTS));
         assert_that!(taken[0], eq(deck::FIVE_OF_HEARTS));
       },
-      None => assert!(false),
+      None => panic!(),
     };
     let opt = stock.take(3);
     match opt {
@@ -135,7 +135,7 @@ mod tests {
         assert_that!(taken[1], eq(deck::ACE_OF_HEARTS));
         assert_that!(taken[0], eq(deck::TWO_OF_HEARTS));
       },
-      None => assert!(false),
+      None => panic!(),
     };
     assert_that!(stock.is_empty(), is(true));
   }
@@ -169,10 +169,10 @@ mod tests {
             assert_that!(taken[0], eq(deck::FIVE_OF_HEARTS));
             assert_that!(stock.is_empty(), is(true));
           },
-          None => assert!(false),
+          None => panic!()
         };
       },
-      None => assert!(false),
+      None => panic!()
     };
   }
 }

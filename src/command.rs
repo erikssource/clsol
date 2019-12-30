@@ -30,37 +30,37 @@ impl Command {
   pub fn from_string(cmd_str: &str) -> Option<Command> {
     let s = cmd_str.trim().to_lowercase();
     if s.is_empty() {
-      return None;
+      None
     }
     else if s.len() == 1 {
       let opt1 = s.parse::<u8>();
       match opt1 {
         Ok(num) => {
           if num >= 1 && num <= 7 {
-            return Some(Command::PileToFoundation{pile_index: num});
+            Some(Command::PileToFoundation{pile_index: num})
           }
           else {
-            return None;
+            None
           }
         } 
         _ => {
           if s == "?" {
-            return Some(Command::ShowHelp);
+            Some(Command::ShowHelp)
           }
-          if s == "r" {
-            return Some(Command::Retire);
+          else if s == "r" {
+            Some(Command::Retire)
           }
           else if s == "n" {
-            return Some(Command::DrawFromStock);
+            Some(Command::DrawFromStock)
           }
           else if s == "q" {
-            return Some(Command::Quit);
+            Some(Command::Quit)
           }
           else if s == "k" {
-            return Some(Command::WasteToFoundation);
+            Some(Command::WasteToFoundation)
           }
           else {
-            return None;
+            None
           }
         }
       }
@@ -74,13 +74,13 @@ impl Command {
           match opt2 {
             Ok(num2) => {
               if num1 >= 1 && num1 <= 7 && num2 >= 1 && num2 <= 7 {
-                return Some(Command::PileToPile{src_pile: num1, dest_pile: num2});
+                Some(Command::PileToPile{src_pile: num1, dest_pile: num2})
               }
               else {
-                return None;
+                None
               }
             },
-            _ => return None,
+            _ => None
           }
         },
         _ => {
@@ -90,29 +90,29 @@ impl Command {
               Ok(num2) => {
                 if num2 >= 1 && num2 <= 7 {
                   match s1 {
-                    "h" => return Some(Command::FoundationToPile{foundation_index: game::HEART_FD, pile_index: num2}),
-                    "d" => return Some(Command::FoundationToPile{foundation_index: game::DIAMOND_FD, pile_index: num2}),
-                    "s" => return Some(Command::FoundationToPile{foundation_index: game::SPADE_FD, pile_index: num2}),
-                    "c" => return Some(Command::FoundationToPile{foundation_index: game::CLUB_FD, pile_index: num2}),
-                    "k" => return Some(Command::WasteToPile{pile_index: num2}),
-                    _ => return None,
+                    "h" => Some(Command::FoundationToPile{foundation_index: game::HEART_FD, pile_index: num2}),
+                    "d" => Some(Command::FoundationToPile{foundation_index: game::DIAMOND_FD, pile_index: num2}),
+                    "s" => Some(Command::FoundationToPile{foundation_index: game::SPADE_FD, pile_index: num2}),
+                    "c" => Some(Command::FoundationToPile{foundation_index: game::CLUB_FD, pile_index: num2}),
+                    "k" => Some(Command::WasteToPile{pile_index: num2}),
+                    _ => None,
                   }
                 }
                 else {
-                  return None;
+                  None
                 }
               },
-              _ => return None,
+              _ => None,
             }
           }
           else {
-            return None;
+            None
           }
         }
       }
     }
     else {
-      return None;
+      None
     }
   }
 }
@@ -181,14 +181,14 @@ mod tests {
     assert_that!(cmd.is_none(), is(false));
     match cmd.unwrap() {
       Command::WasteToPile{pile_index} => assert_that!(pile_index, eq(1)),
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("k7");
     assert_that!(cmd.is_none(), is(false));
     match cmd.unwrap() {
       Command::WasteToPile{pile_index} => assert_that!(pile_index, eq(7)),
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("k8");
@@ -207,14 +207,14 @@ mod tests {
     assert_that!(cmd.is_none(), is(false));
     match cmd.unwrap() {
       Command::PileToFoundation{pile_index} => assert_that!(pile_index, eq(1)),
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("7");
     assert_that!(cmd.is_none(), is(false));
     match cmd.unwrap() {
       Command::PileToFoundation{pile_index} => assert_that!(pile_index, eq(7)),
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("8");
@@ -248,7 +248,7 @@ mod tests {
         assert_that!(src_pile, eq(1));
         assert_that!(dest_pile, eq(5));
       },
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("73");
@@ -258,7 +258,7 @@ mod tests {
         assert_that!(src_pile, eq(7));
         assert_that!(dest_pile, eq(3));
       },
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("41");
@@ -268,7 +268,7 @@ mod tests {
         assert_that!(src_pile, eq(4));
         assert_that!(dest_pile, eq(1));
       },
-      _ => assert!(false),
+      _ => panic!(),
     }
 
     let cmd = Command::from_string("67");
@@ -278,7 +278,7 @@ mod tests {
         assert_that!(src_pile, eq(6));
         assert_that!(dest_pile, eq(7));
       },
-      _ => assert!(false),
+      _ => panic!(),
     }
   }
 }

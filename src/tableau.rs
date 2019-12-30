@@ -33,15 +33,30 @@ impl Tableau {
     if self.piles[dest_idx as usize].is_empty() {
       let mut cut_vec = Vec::new();
       self.piles[src_idx as usize].cut_king(&mut cut_vec);
-      if cut_vec.len() > 0 {
+      if !cut_vec.is_empty() {
         self.piles[dest_idx as usize].add_cut(&mut cut_vec);
-        return Ok(());
+        Ok(())
       }
       else {
-        return Err(());
+        Err(())
       }
     }
-    else {
+    else if let Some(top_card) = self.piles[dest_idx as usize].get_top() {
+		  let mut cut_vec = Vec::new();
+      self.piles[src_idx as usize].cut_pile(top_card, &mut cut_vec);
+      if !cut_vec.is_empty() {
+    	  self.piles[dest_idx as usize].add_cut(&mut cut_vec);
+		    Ok(())
+      }
+      else {
+	      Err(())
+      }
+    }
+	  else {
+		  Err(())
+    }
+		/*
+
       match self.piles[dest_idx as usize].get_top() {
         Some(top_card) => {
           let mut cut_vec = Vec::new();
@@ -55,6 +70,7 @@ impl Tableau {
       }
       return Err(());
     }
+    */
   }
 
   pub fn take(&mut self, index: u8) -> Option<&'static card::Card> {

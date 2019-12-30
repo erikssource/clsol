@@ -1,8 +1,8 @@
 use std::fmt;
 
-pub const DISPLAY_EMPTY: &'static str = "{   }";
-pub const DISPLAY_BLANK: &'static str = "     ";
-pub const DISPLAY_CARD_BACK: &'static str = "{###}";
+pub const DISPLAY_EMPTY: &str = "{   }";
+pub const DISPLAY_BLANK: &str = "     ";
+pub const DISPLAY_CARD_BACK: &str = "{###}";
 
 #[derive(Debug)]
 #[derive(PartialEq)]
@@ -83,7 +83,7 @@ pub struct CardState {
 
 impl CardState {
   pub fn new(card: &'static Card, is_visible: bool) -> CardState {
-    CardState{card: card, is_visible: is_visible}
+    CardState{card, is_visible}
   }
 
   pub fn is_visible(&self) -> bool {
@@ -97,9 +97,11 @@ impl CardState {
 
 impl fmt::Display for CardState {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    match self.is_visible {
-      true => write!(f, "{}", self.card),
-      false => write!(f, "{}", DISPLAY_CARD_BACK)
+    if self.is_visible {
+      write!(f, "{}", self.card)
+    }
+    else {
+      write!(f, "{}", DISPLAY_CARD_BACK)
     }
   }
 }

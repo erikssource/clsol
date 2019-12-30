@@ -107,7 +107,7 @@ impl Pile {
       Some(top_card) => {
         top_card.is_different_color(card) && top_card.is_one_less(card)
       },
-      None => self.cards.len() == 0 && card.value == card::Value::King,
+      None => self.cards.is_empty() && card.value == card::Value::King,
     }
   }
 
@@ -161,7 +161,7 @@ mod tests {
       Some(top_card) => {
         assert_that!(top_card, eq(deck::TEN_OF_CLUBS));
       },
-      None => assert!(false),
+      None => panic!(),
     }    
   }
 
@@ -228,7 +228,7 @@ mod tests {
         assert_that!(col.cards.len(), eq(3));
         assert_that!(col.get_top_index(), eq(2));
       },
-      None => assert!(false)
+      None => panic!(),
     }
   }
 
@@ -283,7 +283,7 @@ mod tests {
         assert_that!(col.cards.len(), eq(2));
       },
       None => {
-        assert!(false);
+        panic!();
       },
     }
   }
