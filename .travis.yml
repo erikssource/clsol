@@ -1,14 +1,31 @@
 language: rust
+cache: cargo
 rust:
   - stable
   - beta
   - nightly
-jobs:
+matrix:
   allow_failures:
     - rust: nightly
   fast_finish: true
-cache: cargo
+os:
+  - linux
+  - osx
+before_deploy:
+  - mv target/release/clsol "target/release/clsol-$TRAVIS_TAG-$TRAVIS_OS_NAME"
 script:
-  - cargo build --verbose
+  - cargo build --verbose --release
   - cargo test --verbose
-  
+deploy:
+  provider: releases
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: "$TRAVIS_RUST_VERSION = stable"
+    branch: master
+  file_glob: true
+  api_key:
+    secure: PqDs9qBanMKD99TJy3QYvqo4IMEKU4p1lJkFqHngPOmioaIJEXlK8OFdTjt1hxH9wKNlzLG3udK2d1DzrLexhmM+46MC3Ki4KcIxBS8vLOPuiZKIz7U4g027mYkWvMynP/SR1AdokoSk3qghRtNCFdN31KCIHRjmTcqe+8Hh7EkGbkNsy9Ug0nTAZiTn/Y5yQyqQUJPCuXm2eUmhcWuvrSNpk2VSpFivX369pGLtot9WHIPzBsLvFT67t4LdgmnLQkSh1L/5mHdfRPTF65sglA2d/1gGq195qw5Iz3ktJnfIIS6XCaDP5qGAXG41lKKHYn/PIPXyBJw5JQfVs6F9G8DVIs2bSefdnngQGhIdSFEEbLXwTxza+/mE4WAqg4yCZxSP2gXp0SO2C0lCwmazZfffEQ9ezIvsFV89L19j75kUiy7lvHvQu8HwL5I6P0sjIU2anpqwOhh/tPKk5gOg7+Si+qmLa6zrggGbs9Dpk8FafTCzXkaHsoyrx3zhgkmb+ymu4tzL9YivKaJ/xB01q5D53DqnL0pyljr2oM+zAj9DSrtSaiREg7gl52uC+Ra/D2nsbg17kEEdx98sqYjxDu4eH9sdvMQngEb53mBamB20u4XdA18oCirGfJryGQWhWkTI4qgwGtzV3bcqmhfY223yjxs4ElDb1WEP268XJUM=
+  file: target/release/clsol-*
+  on:
+    repo: erikssource/clsol
