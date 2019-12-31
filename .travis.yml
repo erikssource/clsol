@@ -11,6 +11,7 @@ matrix:
 os:
   - linux
   - osx
+  - windows
 before_deploy:
   - mv target/release/clsol "target/release/clsol-$TRAVIS_TAG-$TRAVIS_OS_NAME"
 script:
