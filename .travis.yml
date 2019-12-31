@@ -20,8 +20,8 @@ script:
 deploy:
   provider: releases
   skip_cleanup: true
+  draft: true
   on:
-    tags: true
     condition: "$TRAVIS_RUST_VERSION = stable"
     branch: master
   file_glob: true
