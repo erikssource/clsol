@@ -20,6 +20,7 @@ fn show_help() {
     println!(" r          : Retire Current Game");
     println!(" q . . . . .: Quit");
     println!(" n          : Draw Cards from Stock");
+    println!(" a . . . . .: Try to Automatically Finish Game");
     println!(" k . . . . .: Move Card from Waste to Foundation");
     println!(" k[1-7]     : Move Card from Waste to Pile by Number");
     println!(" [1-7] . . .: Move Card from Pile by Number to Foundation");
@@ -58,6 +59,9 @@ fn main() {
                     },
                     command::Command::WasteToFoundation => {
                         game.waste_to_foundation();
+                    },
+                    command::Command::AutoFinish => {
+                        game.auto_finish();
                     },
                     command::Command::WasteToPile{pile_index} => {
                         game.waste_to_pile(pile_index);

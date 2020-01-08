@@ -1,4 +1,4 @@
 tasks:
   - init: cargo build
-    command: cargo watch -x run
+    command: cargo test
 image: gitpod/workspace-full

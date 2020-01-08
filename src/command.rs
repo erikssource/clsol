@@ -3,14 +3,19 @@ use crate::game;
 /*
  * Commands 
  * 
- * h          : ShowHelp
+ * ?          : ShowHelp
  * r          : Retire
  * n          : DrawFromStock
  * q          : Quit
  * k          : WasteToFoundation
+ * a          : AutoFinish
  * k[1-7]     : WasteToPile [pile 0-6] 
  * [1-7]      : PileToFoundation [pile 0-6]
  * [1-7][1-7] : PileToPile [pile 0-6][pile 0-6]
+ * h[1-7]     : FoundationToPile[found: 0-3][pile 0-6]
+ * d[1-7]     : FoundationToPile[found: 0-3][pile 0-6]
+ * s[1-7]     : FoundationToPile[found: 0-3][pile 0-6]
+ * c[1-7]     : FoundationToPile[found: 0-3][pile 0-6]
  */
 
 // TODO: Stats, StatsReset
@@ -20,6 +25,7 @@ pub enum Command {
   Quit,
   DrawFromStock,
   WasteToFoundation,
+  AutoFinish,
   WasteToPile{pile_index: u8},
   PileToFoundation{pile_index: u8},
   PileToPile{src_pile: u8, dest_pile: u8},
@@ -132,6 +138,7 @@ mod tests {
           Command::Quit => String::from("Quit"),
           Command::DrawFromStock => String::from("DrawFromStock"),
           Command::WasteToFoundation => String::from("WasteToFoundation"),
+          Command::AutoFinish => String::from("AutoFinish"),
           Command::WasteToPile{pile_index} => String::from("WasteToPile"),
           Command::PileToFoundation{pile_index} => String::from("PileToFoundation"),
           Command::PileToPile{src_pile, dest_pile} => String::from("PileToPile"),
@@ -158,6 +165,9 @@ mod tests {
 
     let cmd = Command::from_string("k");
     assert_that!(enum_type(&cmd), eq("WasteToFoundation"));
+
+    // let cmd = Command::from_string("a");
+    // assert_that!(enum_type(&cmd), eq("AutoFinish"));
 
     let cmd = Command::from_string("k1");
     assert_that!(enum_type(&cmd), eq("WasteToPile"));

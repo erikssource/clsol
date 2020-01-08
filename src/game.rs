@@ -105,6 +105,10 @@ impl Game {
     }
   }
 
+  pub fn auto_finish(&mut self) {
+      println!("Not yet implemented");
+  }
+
   pub fn waste_to_pile(&mut self, pile_num: u8) {
     let pile_idx = pile_num - 1;
     if let Some(top_card) = self.waste.get_top() {
