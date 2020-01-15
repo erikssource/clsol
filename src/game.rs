@@ -106,19 +106,25 @@ impl Game {
   }
 
   pub fn auto_finish(&mut self) {
-      println!("Not yet implemented");
-      let mut low_index = -1;
-      let mut low_value = card::Value::King.rank() + 1;
-      for i in 0..7
-      {
-        let cardOpt = self.tableau.piles[i].get_top();
-        if let Some(card) = cardOpt {
-          if card.value.rank() < low_value {
-            low_value = card.value.rank();
-            low_index = i as i8;
-          }
+    println!("Not yet implemented");
+    let mut low_index = -1;
+    let mut low_value = card::Value::King.rank() + 1;
+    for i in 0..7
+    {
+      let card_opt = self.tableau.piles[i].get_top();
+      if let Some(card) = card_opt {
+        if card.value.rank() < low_value {
+          low_value = card.value.rank();
+          low_index = i as i8;
         }
       }
+    }
+    if low_index >= 0 {
+      let result = self.pile_to_foundation(low_index as u8);
+      if let Err(_) = result {
+        // Break from loop since we couldn't move the card.
+      }
+    }
   }
 
   pub fn waste_to_pile(&mut self, pile_num: u8) {
@@ -153,7 +159,7 @@ impl Game {
     self.invalid_move();
   }
 
-  pub fn pile_to_foundation(&mut self, pile_num: u8) {
+  pub fn pile_to_foundation(&mut self, pile_num: u8) -> Result<(),()> {
     match self.tableau.get_top(pile_num - 1) {
       Some(top_card) => {
         for foundation in self.foundations.iter_mut() {
@@ -161,13 +167,17 @@ impl Game {
             if let Some(pop) = self.tableau.take(pile_num - 1) {
               foundation.add(pop);
               self.turn += 1;
-              return;     
+              return Ok(());
             }
           }
         }
         self.invalid_move();
+        Err(())
       },
-      None => self.invalid_move(),
+      None => {
+        self.invalid_move();
+        Err(())
+      }
     }
   }
 
