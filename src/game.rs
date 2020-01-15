@@ -107,6 +107,18 @@ impl Game {
 
   pub fn auto_finish(&mut self) {
       println!("Not yet implemented");
+      let mut low_index = -1;
+      let mut low_value = card::Value::King.rank() + 1;
+      for i in 0..7
+      {
+        let cardOpt = self.tableau.piles[i].get_top();
+        if let Some(card) = cardOpt {
+          if card.value.rank() < low_value {
+            low_value = card.value.rank();
+            low_index = i as i8;
+          }
+        }
+      }
   }
 
   pub fn waste_to_pile(&mut self, pile_num: u8) {
