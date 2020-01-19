@@ -67,7 +67,10 @@ fn main() {
                         game.waste_to_pile(pile_index);
                     },
                     command::Command::PileToFoundation{pile_index} => {
-                        game.pile_to_foundation(pile_index);
+                        match game.pile_to_foundation(pile_index) {
+                            Ok(_) => (),
+                            Err(_) => game.invalid_move(),
+                        }
                     },
                     command::Command::PileToPile{src_pile, dest_pile} => {
                         game.pile_to_pile(src_pile, dest_pile);

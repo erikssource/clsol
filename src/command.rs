@@ -56,6 +56,9 @@ impl Command {
           else if s == "r" {
             Some(Command::Retire)
           }
+          else if s == "a" {
+            Some(Command::AutoFinish)
+          }
           else if s == "n" {
             Some(Command::DrawFromStock)
           }
@@ -166,8 +169,8 @@ mod tests {
     let cmd = Command::from_string("k");
     assert_that!(enum_type(&cmd), eq("WasteToFoundation"));
 
-    // let cmd = Command::from_string("a");
-    // assert_that!(enum_type(&cmd), eq("AutoFinish"));
+    let cmd = Command::from_string("a");
+    assert_that!(enum_type(&cmd), eq("AutoFinish"));
 
     let cmd = Command::from_string("k1");
     assert_that!(enum_type(&cmd), eq("WasteToPile"));

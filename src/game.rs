@@ -63,7 +63,7 @@ impl Game {
       && self.foundations[CLUB_FD as usize].is_full() 
   }
 
-  fn invalid_move(&self) {
+  pub fn invalid_move(&self) {
     println!("-----------------------------------------------------");
     println!(" INVALID MOVE!");
   }
@@ -106,24 +106,27 @@ impl Game {
   }
 
   pub fn auto_finish(&mut self) {
-    println!("Not yet implemented");
-    let mut low_index = -1;
-    let mut low_value = card::Value::King.rank() + 1;
-    for i in 0..7
-    {
-      let card_opt = self.tableau.piles[i].get_top();
-      if let Some(card) = card_opt {
-        if card.value.rank() < low_value {
-          low_value = card.value.rank();
-          low_index = i as i8;
+    loop {
+      let mut low_pile = 0;
+      let mut low_value = card::Value::King.rank() + 1;
+      for i in 0..7
+      {
+        let card_opt = self.tableau.piles[i].get_top();
+        if let Some(card) = card_opt {
+          if card.value.rank() < low_value {
+            low_value = card.value.rank();
+            low_pile = (i + 1) as u8;
+          }
         }
       }
-    }
-    if low_index >= 0 {
-      let result = self.pile_to_foundation(low_index as u8);
-      if let Err(_) = result {
-        // Break from loop since we couldn't move the card.
+      if low_pile > 0 {
+        let result = self.pile_to_foundation(low_pile);
+        if let Err(_) = result {
+          // Break from loop since we couldn't move the card.
+          break;
+        }
       }
+      self.display();
     }
   }
 
@@ -170,12 +173,10 @@ impl Game {
               return Ok(());
             }
           }
-        }
-        self.invalid_move();
+        }        
         Err(())
       },
       None => {
-        self.invalid_move();
         Err(())
       }
     }
