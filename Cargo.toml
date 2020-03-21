@@ -1,6 +1,6 @@
 [package]
 name = "clsol"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Erik Larson <erik@welarson.com>"]
 edition = "2018"
 
@@ -8,8 +8,4 @@ edition = "2018"
 
 [dependencies]
 text_io = "0.1"
-rand = "0.7"
-arr_macro = "0.1"
-serde = "1.0"
-serde_json = "1.0"
-hamcrest2 = "*"
+rssol = { git = "https://github.com/erikssource/rssol" }

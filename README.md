@@ -1,10 +1,6 @@
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/erikssource/clsol) 
-
 [![Build Status](https://travis-ci.org/erikssource/clsol.svg?branch=master)](https://travis-ci.org/erikssource/clsol)
 
 # clsol
 Command Line Solitaire
 
-My first program written in Rust. If you are looking for a good example of Rust best practices, this is not the place to look. The code is currently a bit of a mess, but I hope to improve things as I learn Rust and clean things up.
-
-This is a pretty basic version of solitaire with cards drawn from the stock one at a time with unlimited pass-throughs. I plan on making it better with more options as time goes on.
+This is a pretty simple game of solitaire, drawing 1 card at a time from the stock with unlimited pass-throughs.
